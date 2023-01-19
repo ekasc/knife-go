@@ -36,4 +36,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	body := Convert("10",10,16)
+	fmt.Println(body)
 }

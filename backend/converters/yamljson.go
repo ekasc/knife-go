@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -45,14 +44,16 @@ func YAMLToJSON(yamal string) error {
 	if b, err = json.MarshalIndent(j, "", "  "); err != nil {
 		return err
 	}
-	fmt.Println(string(b))
+	//fmt.Println(string(b))
+	_ = b
 	return nil
 }
 
-func JSONToYAML(jason string) error { 
+func JSONToYAML(jason string) error {
 	var jasonObj map[string]interface{}
 	json.Unmarshal([]byte(jason), &jasonObj)
 	yamalData, _ := yaml.Marshal(jasonObj)
-	fmt.Println(string(yamalData))
+	// fmt.Println(string(yamalData))
+	_ = yamalData
 	return nil
 }
