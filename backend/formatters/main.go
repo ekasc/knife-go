@@ -8,5 +8,12 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(i)
+	_ = i
+	//fmt.Println(i)
+
+	i = MiniCSS("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	//fmt.Println(i)
 }

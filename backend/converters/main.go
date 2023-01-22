@@ -28,10 +28,11 @@ func main() {
 	  ]
 	}
 `
-	err := YAMLToJSON(jason)
+	j, err := YAMLToJSON(jason)
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(j)
 	err = JSONToYAML(yamal)
 	if err != nil {
 		fmt.Println(err)

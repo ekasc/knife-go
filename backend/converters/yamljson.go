@@ -23,30 +23,18 @@ func yamlToJson(i interface{}) interface{} {
 }
 
 // Converts YAML string to JSON string. Will break if YAML string contains tabs instead of spaces.
-func YAMLToJSON(yamal string) error {
+func YAMLToJSON(yamal string) (string, error) {
 	var body interface{}
 	if err := yaml.Unmarshal([]byte(yamal), &body); err != nil {
 		panic(err)
 	}
 
 	body = yamlToJson(body)
-	b, err := json.Marshal(body)
+	b, err := json.MarshalIndent(body, "", "  ")
 	if err != nil {
-		return err
+		return "", err
 	}
-
-	var j any
-	err = json.Unmarshal(b, &j)
-	if err != nil {
-		return err
-	}
-
-	if b, err = json.MarshalIndent(j, "", "  "); err != nil {
-		return err
-	}
-	//fmt.Println(string(b))
-	_ = b
-	return nil
+	return string(b), nil
 }
 
 func JSONToYAML(jason string) error {
