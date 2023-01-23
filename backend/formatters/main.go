@@ -9,11 +9,11 @@ func main() {
 		fmt.Println(err)
 	}
 	_ = i
-	//fmt.Println(i)
 
 	i = MiniCSS("")
 	if err != nil {
 		fmt.Println(err)
 	}
-	//fmt.Println(i)
+
+	i = FormatHTML("")
 }
