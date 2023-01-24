@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+//Decode JWT
 func DecodeJWT(tokenString string) (map[string]string, error) {
 	token := strings.Split(tokenString, ".")
 	header, err := base64.RawURLEncoding.DecodeString(token[0])

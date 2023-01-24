@@ -1,11 +1,8 @@
 package main
 
-import "fmt"
-
 func main() {
-	i, err := DecodeJWT("")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(i)
+	//_, _ = EncodeBase64("")
+	//_, _ = DecodeBase64("")
+	//EncodeHTML("")
+	//DecodeHTML("")
 }
