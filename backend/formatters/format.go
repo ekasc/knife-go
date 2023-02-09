@@ -12,6 +12,22 @@ import (
 )
 
 func FormatJSON(jason string, indent int) (string, error) {
+type Payload struct {
+	Body string `json:"body"`
+}
+
+func Format(i Request) Payload {
+	switch i.Type {
+	case "json":
+		return Payload{Body: FormatJSON(i.Data, i.Options)}
+	case "html":
+		return Payload{Body: FormatHTML(i.Data)}
+	case "css":
+		return Payload{Body: MiniCSS(i.Data)}
+	}
+
+	return Payload{}
+}
 	var out bytes.Buffer
 	err := json.Indent(&out, []byte(jason), "", strings.Repeat(" ", indent))
 	if err != nil {
