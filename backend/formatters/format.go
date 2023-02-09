@@ -11,7 +11,6 @@ import (
 	"github.com/tdewolff/minify/v2/css"
 )
 
-func FormatJSON(jason string, indent int) (string, error) {
 type Payload struct {
 	Body string `json:"body"`
 }
@@ -28,14 +27,19 @@ func Format(i Request) Payload {
 
 	return Payload{}
 }
+
+// Prettier JSON
+func FormatJSON(jason string, indent int) string {
 	var out bytes.Buffer
 	err := json.Indent(&out, []byte(jason), "", strings.Repeat(" ", indent))
 	if err != nil {
 		panic(err)
 	}
-	return out.String(), nil
+	return out.String()
+
 }
 
+// Minifies CSS
 func MiniCSS(cssString string) string {
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
@@ -48,9 +52,9 @@ func MiniCSS(cssString string) string {
 	return minifiedCSS
 }
 
-func FormatHTML(input string) string {
+func FormatHTML(i string) string {
 	bf := new(bytes.Buffer)
-	hpp.Format(strings.NewReader(input), bf)
+	hpp.Format(strings.NewReader(i), bf)
 
 	return bf.String()
 }
