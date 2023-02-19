@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { Box } from "../../nav/bar/box"
 //import "./style.css"
 import {
-	Button, Textarea, Grid, FormElement, Input
+	Button, Textarea, Grid, FormElement, Input, Container, Spacer, Col, Row
 } from '@nextui-org/react';
+import { Layout } from '../../nav/bar/layout';
 
 export const TextForm = () => {
 
 	let [input, setInput] = useState('');
 	let [formattedText, setFormattedText] = useState('');
 	let [optionInput, setOptionInput] = useState('');
-	let [typeInput, setTypeInput] = useState('');
 	let [_, setTextArea] = useState('');
+
+	const type: string = "json";
 
 	const handleInputChange = (event: React.ChangeEvent<FormElement>) => {
 		setInput(event.target.value);
-	};
-	const handleTypeChange = (event: React.ChangeEvent<FormElement>) => {
-		setTypeInput(event.target.value);
 	};
 
 	const handleOptionChange = (event: React.ChangeEvent<FormElement>) => {
@@ -33,7 +31,7 @@ export const TextForm = () => {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				Type: typeInput,
+				Type: type,
 				Data: input,
 				Options: Number(optionInput)
 			}),
@@ -45,39 +43,63 @@ export const TextForm = () => {
 
 	return (
 
-		<Box css={{ px: "$12", mt: "$8", "@xsMax": { px: "$10" } }}>
-			<form onSubmit={handleSubmit}>
-				<Grid.Container gap={3}>
-					<Grid xs={6} >
-						<Textarea
-							value={input}
-							onChange={handleInputChange}
-							label="Input"
-						/>
-					</Grid>
-					<Grid xs={6} >
-						<Textarea
-							value={formattedText}
-
-							onChange={handleOutputChange}
-							label="Output"
-							readOnly
-						/>
-					</Grid>
-					<Grid xs={3}>
-						<Input label='Type' value={typeInput} onChange={handleTypeChange} />
-					</Grid>
-					<Grid xs={3}>
-						<Input label='Options' value={optionInput} onChange={handleOptionChange} />
-					</Grid>
-					<Grid xs={6}>
-						<Button type="submit" style={{ padding: '5px' }}>
-							Submit
-						</Button>
-					</Grid>
-				</Grid.Container>
-			</form >
-		</Box >
+		<>
+			<Layout>
+				<form onSubmit={handleSubmit}>
+					<Spacer />
+					<Container gap={0} md>
+						<Row gap={0}>
+							<Col>
+								<Grid.Container justify="flex-start" >
+									<Grid css={{}} >
+										<Grid >
+											<Textarea
+												bordered
+												value={input}
+												onChange={handleInputChange}
+												label="Input"
+												rows={25}
+												cols={60} />
+										</Grid>
+										<Grid >
+											<Spacer y={2} />
+											<Input
+												bordered
+												labelPlaceholder='Indent'
+												value={optionInput}
+												onChange={handleOptionChange} />
+										</Grid>
+									</Grid>
+								</Grid.Container>
+							</Col>
+							<Col>
+								<Grid.Container justify="flex-end" css={{}} >
+									<Grid>
+										<Textarea
+											value={formattedText}
+											bordered
+											onChange={handleOutputChange}
+											label="Output"
+											readOnly
+											rows={25}
+											cols={60} />
+									</Grid>
+									<Grid>
+										<Spacer y={2} />
+										<Button type="submit"
+											css={{
+												color: "Black",
+												linearGradient: "45deg, $red600 -50%, $yellow600 200%"
+											}} >Submit
+										</Button>
+									</Grid>
+								</Grid.Container>
+							</Col>
+						</Row>
+					</Container>
+				</form >
+			</Layout >
+		</>
 	);
 };
 
