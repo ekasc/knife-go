@@ -1,8 +1,13 @@
 import React from "react";
 import { Navbar, Dropdown } from "@nextui-org/react";
 
+type mItem = {
+	key?: string;
+	name?: string
+	desc?: string;
+}
 
-export default function MenuItems(props: { item: any; title: any; }) {
+export default function MenuItems(props: { item: { key: string, name: string, desc: string }[], title: string }) {
 	const items = props.item;
 	const title = props.title;
 	return (
@@ -15,9 +20,7 @@ export default function MenuItems(props: { item: any; title: any; }) {
 						css={{
 							px: 0,
 							dflex: "center",
-							svg: { pe: "none" },
 						}}
-						//iconRight={icons.chevron}
 						ripple={false}
 					>{title}
 					</Dropdown.Button>
@@ -28,7 +31,7 @@ export default function MenuItems(props: { item: any; title: any; }) {
 						$$dropdownMenuWidth: "340px",
 						$$dropdownMenuHeight: "70px",
 						"& .nextui-dropdown-item": {
-							py: "$4",
+							py: "$10",
 							"& .nextui-dropdown-item-content": {
 								w: "100%",
 								fontWeight: "$semibold",
@@ -38,7 +41,7 @@ export default function MenuItems(props: { item: any; title: any; }) {
 					items={items}
 				>
 
-					{(items) => (
+					{(items: mItem) => (
 						<Dropdown.Item
 							key={items.key}
 							showFullDescription

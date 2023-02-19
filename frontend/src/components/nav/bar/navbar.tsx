@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import { Navbar, Button, Link, Text, Dropdown } from "@nextui-org/react";
+import { Navbar, Text } from "@nextui-org/react";
 import { Layout } from "./layout";
 import MenuItem from '../menu/menuItems';
 
-const formatters = [
+export const formatters = [
 	{ key: "json", name: "JSON", desc: "Pretty print JSON with indentation" },
 	{ key: "html", name: "HTML", desc: "Pretty print HTML" },
 	{ key: "css", name: "CSS", desc: "Minify CSS" }
@@ -35,7 +34,7 @@ const text = [
 	{ key: "markdown", name: "Render", desc: "Render markdown" },
 ]
 
-const navbarItems = {
+export const navbarItems = {
 	"formatters": formatters,
 	"converters": converters,
 	"codec": codec,
@@ -46,20 +45,17 @@ const navbarItems = {
 
 export default function Nav() {
 	return (
-		<Layout>
-			<Navbar isBordered variant="sticky">
+			<Navbar isBordered variant="floating">
 				<Navbar.Brand>
 					<Text
 						b
-						size={32}
-						color="inherit"
+						size={40}
 						hideIn="xs"
 						css={{
-							textGradient: "45deg, $yellow600 -20%, $red600 100%",
+							textGradient: "45deg, $red600 -50%, $yellow600 200%",
 						}}
 						weight="bold"
-					>
-						knife - go
+					>knife - go
 					</Text>
 				</Navbar.Brand>
 				<MenuItem item={navbarItems.formatters} title="Formatters" />
@@ -69,7 +65,6 @@ export default function Nav() {
 				<MenuItem item={navbarItems.graphic} title="Graphic" />
 				<MenuItem item={navbarItems.text} title="Text" />
 			</Navbar>
-		</Layout >
 	)
 }
 
