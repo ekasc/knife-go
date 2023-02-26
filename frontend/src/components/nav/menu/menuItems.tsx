@@ -1,9 +1,9 @@
 import React from "react";
-import { Navbar, Dropdown, Link } from "@nextui-org/react";
+import { Navbar, Dropdown } from "@nextui-org/react";
 
-export type mItem = {
+type mItem = {
 	key?: string;
-	name?: string;
+	name?: string
 	desc?: string;
 }
 
@@ -11,9 +11,7 @@ export default function MenuItems(props: { item: { key: string, name: string, de
 	const items = props.item;
 	const title = props.title;
 	return (
-		<Navbar.Content
-			hideIn="md"
-		>
+		<Navbar.Content>
 			<Dropdown isBordered>
 				<Navbar.Item>
 					<Dropdown.Button
@@ -48,16 +46,13 @@ export default function MenuItems(props: { item: { key: string, name: string, de
 							key={items.key}
 							showFullDescription
 							description={items.desc}
-						>
-							<Navbar.Link href={`/${title.toLowerCase()}/${items?.name?.toLowerCase()}`}>
-								{items.name}
-							</Navbar.Link>
+						>{items.name}
 						</Dropdown.Item>
 					)}
 				</Dropdown.Menu>
 			</Dropdown>
 
-		</Navbar.Content >
+		</Navbar.Content>
 	)
 
 }
