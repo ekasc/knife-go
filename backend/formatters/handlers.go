@@ -1,4 +1,4 @@
-package main
+package formatters
 
 import (
 	"bytes"
@@ -53,7 +53,7 @@ func FormatHTML(i string) string {
 	return bf.String()
 }
 
-func prettyJSON(w http.ResponseWriter, r *http.Request) {
+func HandlePrettyJSON(w http.ResponseWriter, r *http.Request) {
 	var p Request
 
 	if r.Method == "POST" {
@@ -63,7 +63,7 @@ func prettyJSON(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func prettyHTML(w http.ResponseWriter, r *http.Request) {
+func HandlePrettyHTML(w http.ResponseWriter, r *http.Request) {
 	var p Request
 
 	if r.Method == "POST" {
@@ -72,7 +72,7 @@ func prettyHTML(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func miniCSS(w http.ResponseWriter, r *http.Request) {
+func HandleMiniCSS(w http.ResponseWriter, r *http.Request) {
 	var p Request
 	if r.Method == "POST" {
 		json.NewDecoder(r.Body).Decode(&p)
