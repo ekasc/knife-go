@@ -7,5 +7,4 @@ use (
 	./formatters
 	./generators
 	./graphic
-	./text
 )

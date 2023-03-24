@@ -3,6 +3,7 @@ package main
 import (
 	"codec"
 	"converters"
+	"generators"
 	"log"
 	"net/http"
 
@@ -49,7 +50,10 @@ func HandleRoutes() {
 	r.Post("/decode/url", codec.HandleDecodeURL)
 	r.Post("/decode/jwt", codec.HandleDecodeJWT)
 
-	log.Println("Listening on port 8080")
-
-	http.ListenAndServe(":8080", r)
+	//Generators
+	r.Post("/generate/hash", generators.HandleGenerateHash)
+	err := http.ListenAndServe(":8080", r)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
