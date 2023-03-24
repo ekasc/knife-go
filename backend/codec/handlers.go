@@ -3,7 +3,6 @@ package codec
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"formatters"
 	"html"
 	"log"
@@ -31,15 +30,6 @@ func EncodeBase64(input string) (string, error) {
 	dst := make([]byte, base64.StdEncoding.EncodedLen(len(input)))
 	base64.StdEncoding.Encode(dst, []byte(input))
 
-	token := strings.Split(input, ".")
-	header, err := base64.RawURLEncoding.DecodeString(token[0])
-	payload, err := base64.RawURLEncoding.DecodeString(token[1])
-	if err != nil {
-		fmt.Println(err)
-	}
-	resp := make(map[string]interface{}, 0)
-	resp["header"] = string(header)
-	resp["payload"] = string(payload)
 	return string(dst), nil
 }
 
