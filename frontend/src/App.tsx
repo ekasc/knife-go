@@ -1,11 +1,17 @@
-import { NextUIProvider } from '@nextui-org/react';
+import { AppShell, ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import { useHotkeys, useLocalStorage } from '@mantine/hooks';
+import { useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import NavBar from "../src/components/nav/bar/navbar";
+import ShellHeader from './components/nav/header/header';
 import CodecForm from './components/sections/content/codec';
 import CodecJWTForm from './components/sections/content/codecJWT';
 import ConvertFormBase from './components/sections/content/convertbase';
 import ConvertForm from './components/sections/content/convertyj';
 import FormatForm from './components/sections/content/formatters';
+import GenerateForm from './components/sections/content/generators';
+import MarkdownForm from './components/sections/content/markdown';
+import TextDiffForm from './components/sections/content/textDiff';
 import ErrorPage from './components/sections/error/errorPage';
 import { Home } from './components/sections/home/home';
 
@@ -13,93 +19,108 @@ import { Home } from './components/sections/home/home';
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Home />,
+		element: <><Home /></>,
 		errorElement: <ErrorPage />
 	},
 
 	{
 		path: "/formatters/json",
-		element: <><NavBar /><FormatForm disabled={false} type="json" /></>,
+		element: <><FormatForm inputTag type="json" /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/formatters/html",
-		element: <><NavBar /><FormatForm disabled type="html" /></>,
+		element: <><FormatForm type="html" inputTag={false} /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/formatters/css",
-		element: <><NavBar /><FormatForm disabled type="css" /></>,
+		element: <><FormatForm type="css" inputTag={false} /></>,
 		errorElement: <ErrorPage />
 	},
 
 	{
 		path: "/converters/yaml",
-		element: <><NavBar /><ConvertForm type="yaml" /></>,
+		element: <><ConvertForm type="yaml" /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/converters/json",
-		element: <><NavBar /><ConvertForm type="json" /></>,
+		element: <><ConvertForm type="json" /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/converters/base",
-		element: <><NavBar /><ConvertFormBase /></>,
+		element: <><ConvertFormBase /></>,
 		errorElement: <ErrorPage />
 	},
 
 	{
 		path: "/encode-decode/base64",
-		element: <><NavBar /><CodecForm type="base64" /></>,
+		element: <><CodecForm type="base64" /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/encode-decode/html",
-		element: <><NavBar /><CodecForm type="html" /></>,
+		element: <><CodecForm type="html" /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/encode-decode/url",
-		element: <><NavBar /><CodecForm type="url" /></>,
+		element: <><CodecForm type="url" /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/encode-decode/jwt",
-		element: <><NavBar /><CodecJWTForm /></>,
+		element: <><CodecJWTForm /></>,
 		errorElement: <ErrorPage />
 	},
 
 	{
 		path: "/generators/hash",
-		element: <><NavBar /><CodecJWTForm /></>,
+		element: <><GenerateForm /></>,
 		errorElement: <ErrorPage />
 	},
-
-	{
-		path: "/graphic/conversion",
-		element: <><NavBar /><CodecJWTForm /></>,
-		errorElement: <ErrorPage />
-	},
-
 	{
 		path: "/text/difference",
-		element: <><NavBar /><CodecJWTForm /></>,
+		element: <><TextDiffForm /></>,
 		errorElement: <ErrorPage />
 	},
 	{
 		path: "/text/render",
-		element: <><NavBar /><CodecJWTForm /></>,
+		element: <><MarkdownForm /></>,
 		errorElement: <ErrorPage />
 	},
 
 ])
 
 function App() {
+	const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+		key: 'mantine-color-scheme',
+		defaultValue: 'dark',
+		getInitialValueInEffect: true,
+	});
+
+	useHotkeys([['mod + J', () => toggleColorScheme()]]);
+	const toggleColorScheme = (value?: ColorScheme) =>
+		setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+
+	const [opened, setOpened] = useState(false)
+
 	return (
-		<NextUIProvider>
-			<RouterProvider router={router} />
-		</NextUIProvider>
+		<ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+			<MantineProvider theme={{ fontFamily: "monospace", colorScheme }} >
+				<AppShell
+					navbar={<NavBar opened={opened} setOpened={setOpened} />}
+					styles={(theme) => ({
+						main: { background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
+					})}
+					header={<ShellHeader opened={opened} setOpened={setOpened} />}
+				>
+					<RouterProvider router={router} />
+				</AppShell>
+			</MantineProvider>
+		</ColorSchemeProvider>
 	)
 }
 

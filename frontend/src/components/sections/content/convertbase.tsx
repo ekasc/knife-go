@@ -1,8 +1,21 @@
-import { Button, Container, FormElement, Grid, Input, Spacer, } from "@nextui-org/react";
+import { Button, createStyles, Flex, Grid, Space, TextInput } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { useState } from "react";
-import { Layout } from "../../nav/bar/layout";
 
 type BaseResponse = { body: { Decimal: string, Binary: string, Octal: string, Hexadecimal: string } }
+
+const useStyles = createStyles((theme) => ({
+	container: {
+		padding: '2rem',
+		paddingTop: '1rem',
+	},
+	btn: {
+		backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[6] : theme.colors.red[6],
+		'&:not([data-disabled])': theme.fn.hover({
+			backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.red[8]
+		}),
+	}
+}))
 
 export const ConvertFormBase = () => {
 	let [numInput, setNumInput] = useState('');
@@ -12,16 +25,19 @@ export const ConvertFormBase = () => {
 	let [octalOutput, setOctalOutput] = useState('');
 	let [hexOutput, setHexOutput] = useState('');
 
+	const { classes } = useStyles();
+	const largeScreen = useMediaQuery('(min-width: 767px)');
 
-	const handleNumChange = (event: React.ChangeEvent<FormElement>) => {
+
+	const handleNumChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setNumInput(event.target.value);
 	};
 
-	const handleBaseChange = (event: React.ChangeEvent<FormElement>) => {
+	const handleBaseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setBaseInput(+event.target.value);
 	};
 
-	const handleOutputChange = (event: React.ChangeEvent<FormElement>) => {
+	const handleOutputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setBinaryOutput(event.target.value);
 		setDecimalOutput(event.target.value);
 		setOctalOutput(event.target.value);
@@ -38,7 +54,6 @@ export const ConvertFormBase = () => {
 			}),
 		});
 		const data: BaseResponse = await response.json();
-		console.log(data);
 		setDecimalOutput(data.body.Decimal);
 		setBinaryOutput(data.body.Binary);
 		setOctalOutput(data.body.Octal);
@@ -47,115 +62,61 @@ export const ConvertFormBase = () => {
 
 	return (
 		<>
-			<Layout>
-				<form onSubmit={handleSubmit}>
-					<Spacer />
-					<Container md gap={0.5} >
-						<Grid.Container gap={0.5}>
-							<Grid sm direction='row' alignItems="center" >
-								<Spacer y={2} />
-								<Grid >
-									<Input
-										bordered
-										label="Enter Number"
-										value={numInput}
-										type="number"
-										size="xl"
-										onChange={handleNumChange} />
-								</Grid>
-								<Spacer y={2} />
-
-								<Grid >
-									<Input
-										bordered
-										label="Enter Base"
-										value={baseInput}
-										size="xl"
-										type="number"
-										helperText="From base"
-
-										onChange={handleBaseChange} />
-
-								</Grid>
-								<Spacer y={2} />
-								<Grid>
-									<Spacer y={1.5} />
-									<Button
-										size="lg"
-										type="submit"
-										css={{
-											color: "Black",
-											linearGradient: "45deg, $red600 -50%, $yellow600 200%",
-										}}
-									>Submit</Button>
-								</Grid>
-							</Grid>
-						</Grid.Container>
-						<Grid.Container>
-							<Grid sm direction='column'
-								alignItems="baseline"
-							>
-
-								<Spacer y={2} />
-								<Grid >
-									<Input
-										css={{
-											width: "750px",
-											"@smMax": { width: "100%" }
-										}}
-										readOnly
-										value={binaryOutput}
-										onChange={handleOutputChange}
-										label="Binary"
-										size="xl"
-									/>
-								</Grid>
-								<Spacer y={2} />
-								<Grid >
-									<Input
-										css={{
-											width: "750px",
-											"@smMax": { width: "100%" }
-										}}
-										size="xl"
-										value={decimalOutput}
-										onChange={handleOutputChange}
-										readOnly
-										label="Decimal" />
-								</Grid>
-								<Spacer y={2} />
-								<Grid >
-									<Input
-										css={{
-											width: "750px",
-											"@smMax": { width: "100%" }
-										}}
-										readOnly
-										value={octalOutput}
-										onChange={handleOutputChange}
-										label="Octal"
-										size="xl" />
-								</Grid>
-								<Spacer y={2} />
-								<Grid >
-									<Input
-										css={{
-											width: "750px",
-											"@smMax": { width: "100%" }
-										}}
-										readOnly
-										value={hexOutput}
-										label="Hexadecimal"
-										onChange={handleOutputChange}
-										size="xl" />
-								</Grid>
-
-							</Grid>
-						</Grid.Container>
-					</Container>
-				</form >
-			</Layout >
-
+			<form onSubmit={handleSubmit}>
+				<div className={classes.container}>
+					<Grid justify='space-around' columns={24} gutter='xl' >
+						<Grid.Col span={largeScreen ? 10 : 24}>
+							<TextInput
+								label="Enter Number"
+								value={numInput}
+								type="number"
+								onChange={handleNumChange} />
+						</Grid.Col>
+						<Grid.Col span={largeScreen ? 10 : 24}>
+							<TextInput
+								label="Enter Base"
+								value={baseInput}
+								type="number"
+								description="From base"
+								inputWrapperOrder={['label', 'input', 'description']}
+								onChange={handleBaseChange} />
+						</Grid.Col>
+						<Grid.Col span={largeScreen ? 4 : 24} >
+							<Space h='1.4rem' />
+							<Button
+								className={classes.btn}
+								type="submit"
+							>Submit</Button>
+						</Grid.Col>
+					</Grid>
+					<Space h='1rem' />
+					<Flex direction='column' gap='xl' justify='flex-start' >
+						<TextInput
+							readOnly
+							value={binaryOutput}
+							onChange={handleOutputChange}
+							label="Binary"
+						/>
+						<TextInput
+							value={decimalOutput}
+							onChange={handleOutputChange}
+							readOnly
+							label="Decimal" />
+						<TextInput
+							readOnly
+							value={octalOutput}
+							onChange={handleOutputChange}
+							label="Octal"
+						/>
+						<TextInput
+							readOnly
+							value={hexOutput}
+							label="Hexadecimal"
+							onChange={handleOutputChange}
+						/>
+					</Flex>
+				</div>
+			</form >
 		</>
 	)
 }

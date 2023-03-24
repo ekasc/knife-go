@@ -1,27 +1,35 @@
+import { Button, createStyles, Grid, Group, Radio, Textarea } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import React, { useState } from 'react';
-//import "./style.css"
-import {
-	Button, Textarea, Grid, FormElement, Spacer, Radio,
-} from '@nextui-org/react';
-import { Layout } from '../../nav/bar/layout';
+
+const useStyles = createStyles((theme) => ({
+	container: {
+		padding: '1rem',
+		paddingTop: '0',
+	},
+	btn: {
+		backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[6] : theme.colors.red[6],
+		'&:not([data-disabled])': theme.fn.hover({
+			backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.red[8]
+		}),
+	},
+}))
 
 export const CodecForm = (props: { type: string }) => {
-
+	const { classes, theme } = useStyles();
 	let [inputText, setInputText] = useState('');
 	let [outputText, setOutputText] = useState('');
 	let [checked, setChecked] = useState('');
-
 	const type: string = props.type;
+	const largeScreen = useMediaQuery('(min-width: 767px)');
 
-
-	const handleInputChange = (event: React.ChangeEvent<FormElement>) => {
+	const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInputText(event.target.value);
 	};
-
-
-	const handleOutputChange = (event: React.ChangeEvent<FormElement>) => {
+	const handleOutputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setOutputText(event.target.value);
 	};
+
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const response = await fetch(`http://localhost:8080/${checked}/${type}`, {
@@ -35,61 +43,52 @@ export const CodecForm = (props: { type: string }) => {
 		const data = await response.json();
 		console.log(data)
 		setOutputText(type === "jwt" ? data.body : data.body);
-		//console.log(data.body);
 	};
 
 	return (
-
 		<>
-			<Layout>
-				<form onSubmit={handleSubmit}>
-					<Spacer />
-					<Grid.Container gap={0.5} >
-						<Grid sm direction='column' alignItems='center'>
-							<Grid >
-								<Textarea
-									bordered
-									value={inputText}
-									onChange={handleInputChange}
-									label="Input"
-									rows={25}
-									cols={60} />
-							</Grid>
-						</Grid>
-						<Grid sm direction='column'
-							alignItems='center'
-						>
-							<Grid >
-								<Textarea
-									value={outputText}
-									bordered
-									onChange={handleOutputChange}
-									label="Output"
-									readOnly
-									rows={25}
-									cols={60} />
-							</Grid>
-							<Spacer y={1.5} />
-							<Grid css={{ display: 'flex' }}>
-								<Radio.Group orientation='horizontal'
-									value={checked} onChange={setChecked}
-								>
-									<Radio isDisabled={props.disable1} value='encode'> Encode </Radio>
-									<Radio isDisabled={props.disable2} value='decode'> Decode </Radio>
+			<form onSubmit={handleSubmit}>
+				<div className={classes.container}>
+					<Grid justify='space-around' columns={24} gutter='xl' >
+						<Grid.Col span={largeScreen ? 12 : 24} >
+							<Textarea
+								value={inputText}
+								onChange={handleInputChange}
+								label="Input"
+								spellCheck='false'
+								minRows={20}
+							/>
+						</Grid.Col >
+						<Grid.Col span={largeScreen ? 12 : 24}>
+							<Textarea
+								value={outputText}
+								onChange={handleOutputChange}
+								label="Output"
+								readOnly
+								minRows={20}
+								spellCheck='false'
+							/>
+						</Grid.Col>
+						<Grid.Col >
+							<Group >
+								<Radio.Group value={checked} onChange={setChecked} size='md' >
+									<Group >
+										<Radio value='encode' label='Encode'
+											color={theme.colorScheme === 'dark' ? 'cyan' : 'red'}
+										/>
+										<Radio value='decode' label='Decode'
+											color={theme.colorScheme === 'dark' ? 'cyan' : 'red'}
+										/>
+									</Group>
 								</Radio.Group>
-								<Spacer x={6} />
-								<Button type="submit"
-									size='sm'
-									css={{
-										color: "Black",
-										linearGradient: "45deg, $red600 -50%, $yellow600 200%"
-									}} >Submit
+								<Button type="submit" className={classes.btn}
+								>Submit
 								</Button>
-							</Grid>
-						</Grid>
-					</Grid.Container>
-				</form >
-			</Layout >
+							</Group>
+						</Grid.Col>
+					</Grid>
+				</div>
+			</form >
 		</>
 	);
 };

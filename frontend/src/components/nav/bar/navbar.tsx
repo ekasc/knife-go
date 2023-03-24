@@ -1,108 +1,114 @@
-import { Collapse, Dropdown, Link, Navbar, Spacer, Switch, Text } from "@nextui-org/react";
-import { Layout } from "./layout";
-import MenuItem, { mItem } from '../menu/menuItems';
-import { Fragment } from "react";
+import { Navbar, ScrollArea, createStyles, useMantineColorScheme, Group, SegmentedControl, Center, Box, } from '@mantine/core';
+import { LinksGroup } from "../menu/menuItems";
+import { IconMoon, IconSun } from "@tabler/icons-react";
+
 
 const formatters = [
-	{ key: "json", name: "JSON", desc: "Pretty print JSON with indentation" },
-	{ key: "html", name: "HTML", desc: "Pretty print HTML" },
-	{ key: "css", name: "CSS", desc: "Minify CSS" }
+	{ label: "JSON", desc: "Pretty print JSON with indentation", link: "/formatters/json" },
+	{ label: "HTML", desc: "Pretty print HTML", link: "/formatters/html" },
+	{ label: "CSS", desc: "Minify CSS", link: "/formatters/css" }
 ];
 
 const converters = [
-	{ key: "yamltojson", name: "YAML", desc: "Convert YAML to JSON" },
-	{ key: "jsontoyaml", name: "JSON", desc: "Convert JSON to YAMl" },
-	{ key: "base", name: "Base", desc: "Convert number bases" },
+	{ label: "YAML", desc: "Convert YAML to JSON", link: "/converters/yaml" },
+	{ label: "JSON", desc: "Convert JSON to YAMl", link: "/converters/json" },
+	{ label: "Base", desc: "Convert number bases", link: "/converters/base" },
 ]
 
 const codec = [
-	{ key: "base64", name: "Base64", desc: "Encode/Decode Base64" },
-	{ key: "html", name: "HTML", desc: "Encode/Decode HTML" },
-	{ key: "url", name: "URL", desc: "Encode/Decode URL" },
-	{ key: "jwt", name: "JWT", desc: "Encode/Decode JWT" },
+	{ label: "Base64", desc: "Encode/Decode Base64", link: "/encode-decode/base64" },
+	{ label: "HTML", desc: "Encode/Decode HTML", link: "/encode-decode/html" },
+	{ label: "URL", desc: "Encode/Decode URL", link: "/encode-decode/url" },
+	{ label: "JWT", desc: "Encode/Decode JWT", link: "/encode-decode/jwt" },
 ]
 
 const generators = [
-	{ key: "hash", name: "Hash", desc: "Generate SHA-256, SHA-1, MD5" },
-]
-
-const graphic = [
-	{ key: "img", name: "Conversion", desc: "Change image format" },
+	{ label: "Hash", desc: "Generate SHA-256, SHA-1, MD5", link: "/generators/hash" },
 ]
 
 const text = [
-	{ key: "textdiff", name: "Difference", desc: "Compare texts" },
-	{ key: "markdown", name: "Render", desc: "Render markdown" },
+	{ label: "Difference", desc: "Compare texts", link: "/text/difference" },
+	{ label: "Render", desc: "Render markdown", link: "/text/render" },
 ]
 
-export const navbarItems = {
-	"formatters": formatters,
-	"converters": converters,
-	"codec": codec,
-	"generators": generators,
-	"graphic": graphic,
-	"text": text,
-}
+export const navbarItems = [
+	{ label: 'Formatters', links: formatters },
+	{ label: 'Converters', links: converters },
+	{ label: 'Generators', links: generators },
+	{ label: 'Encode-Decode', links: codec },
+	{ label: 'Text', links: text },
+]
 
-function CollapseItems(props: { item: { key: string, name: string, desc: string }[], title: string }) {
-	const title = props.title;
-	const item = props.item;
+const useStyles = createStyles((theme) => ({
+	navbar: {
+		background: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.red[5],
+	},
+	links: {
+		marginLeft: `calc(${theme.spacing.md} *-1)`,
+		marginRight: `calc(${theme.spacing.md} *-1)`,
+	},
+
+	linksInner: {
+		paddingTop: theme.spacing.xl,
+		paddingBottom: theme.spacing.xl,
+	},
+	toggle: {
+		padding: 'auto',
+		marginLeft: '16px'
+	}
+}));
+
+export function ThemeToggle() {
+	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 	return (
-		<Collapse title={title}>
-			{item.map((item, key) => (
-				<Fragment key={key}>
-					<Link href={`/${title.toLowerCase()}/${item.name.toLowerCase()}`}>{item.name}</Link>
-					<Spacer />
-				</Fragment>
-			))}
-		</Collapse >
+		<Group>
+			<SegmentedControl
+				value={colorScheme}
+				onChange={(value: 'light' | 'dark') => toggleColorScheme(value)}
+				data={[
+					{
+						value: 'light',
+						label: (
+							<Center>
+								<IconSun size="1rem" stroke={1.5} />
+								<Box ml={10}>Light</Box>
+							</Center>
+						),
+					},
+					{
+						value: 'dark',
+						label: (
+							<Center>
+								<IconMoon size="1rem" stroke={1.5} />
+								<Box ml={10}>Dark</Box>
+							</Center>
+						),
+					},
+				]}
+			/>
+		</Group>
 	)
 }
 
-export default function Nav() {
+export default function Nav(props: { opened: boolean, setOpened: React.Dispatch<React.SetStateAction<boolean>> }) {
+	const { classes } = useStyles();
+	const links = navbarItems.map((obj) => <LinksGroup {...obj} key={obj.label} />);
+
 	return (
-		<Navbar isBordered variant="floating">
-			<Navbar.Toggle showIn="md" />
-			<Navbar.Brand
-				css={{
-					"@md": { w: "12%" }
-				}}
-			>
-				<Text
-					b
-					size={40}
-
-					css={{
-						textGradient: "45deg, $red600 -50%, $yellow600 200%",
-					}}
-					weight="bold"
-				>knife - go
-				</Text>
-			</Navbar.Brand>
-			<MenuItem item={navbarItems.formatters} title="Formatters" />
-			<MenuItem item={navbarItems.converters} title="Converters" />
-			<MenuItem item={navbarItems.codec} title="Encode-Decode" />
-			<MenuItem item={navbarItems.generators} title="Generators" />
-			<MenuItem item={navbarItems.graphic} title="Graphic" />
-			<MenuItem item={navbarItems.text} title="Text" />
-			<Navbar.Content>
-				<Switch />
-			</Navbar.Content>
-
-			<Navbar.Collapse>
-				<Navbar.CollapseItem>
-					<Collapse.Group>
-						<CollapseItems title="Formatters" item={navbarItems.formatters} />
-						<CollapseItems title="Converters" item={navbarItems.converters} />
-						<CollapseItems title="Encode/Decode" item={navbarItems.codec} />
-						<CollapseItems title="Generators" item={navbarItems.generators} />
-						<CollapseItems title="Graphic" item={navbarItems.graphic} />
-						<CollapseItems title="Text" item={navbarItems.text} />
-
-					</Collapse.Group>
-				</Navbar.CollapseItem>
-
-			</Navbar.Collapse>
+		<Navbar
+			p="md"
+			width={{ sm: 300 }} className={classes.navbar}
+			hiddenBreakpoint="sm"
+			hidden={!props.opened}
+		>
+			<Navbar.Section className={classes.toggle}>
+				<ThemeToggle />
+			</Navbar.Section>
+			<Navbar.Section grow className={classes.links} component={ScrollArea} >
+				<div className={classes.linksInner}>
+					{links}
+				</div>
+			</Navbar.Section>
 		</Navbar>
 	)
 }

@@ -1,27 +1,56 @@
+import { Button, createStyles, Grid, Space, Textarea } from '@mantine/core';
 import React, { useState } from 'react';
-//import "./style.css"
-import {
-	Button, Textarea, Grid, FormElement, Spacer, Radio,
-} from '@nextui-org/react';
-import { Layout } from '../../nav/bar/layout';
+
+const useStyles = createStyles((theme) => ({
+	container: {
+		'@media (max-width: 500px)': {
+			padding: '1rem',
+			paddingLeft: '0',
+		},
+		padding: '2rem',
+		paddingTop: '0',
+	},
+
+	btn: {
+		'@media (max-width: 500px)': {
+			width: '40%',
+		},
+		width: '15%',
+		backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[6] : theme.colors.red[6],
+		'&:not([data-disabled])': theme.fn.hover({
+			backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.red[8]
+		}),
+	},
+
+	inputCol: {
+		'@media (max-width: 500px)': {
+			minHeight: '1rem'
+		},
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		display: 'flex',
+	},
+
+}))
+
 
 export const CodecJWTForm = () => {
+	const { classes } = useStyles();
 
 	let [inputText, setInputText] = useState('');
 	let [headerText, setHeaderText] = useState('');
 	let [payloadText, setPayloadText] = useState('');
-	let [checked, setChecked] = useState('decode');
 
-	const handleInputChange = (event: React.ChangeEvent<FormElement>) => {
+	const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInputText(event.target.value);
 	};
-	const handleOutputChange = (event: React.ChangeEvent<FormElement>) => {
+	const handleOutputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setHeaderText(event.target.value);
 		setPayloadText(event.target.value);
 	};
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await fetch(`http://localhost:8080/${checked}/jwt`, {
+		const response = await fetch(`http://localhost:8080/decode/jwt`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -36,68 +65,43 @@ export const CodecJWTForm = () => {
 	return (
 
 		<>
-			<Layout>
-				<form onSubmit={handleSubmit}>
-					<Spacer />
-					<Grid.Container gap={0.5} >
-						<Grid sm direction='column' alignItems='center'>
-							<Grid >
-								<Textarea
-									bordered
-									value={inputText}
-									onChange={handleInputChange}
-									label="Input"
-									rows={25}
-									cols={60} />
-							</Grid>
-						</Grid>
-						<Grid sm direction='column'
-							alignItems='center'
-						>
-							<Grid >
-								<Textarea
-									value={headerText}
-									bordered
-									onChange={handleOutputChange}
-									label="Output"
-									readOnly
-									placeholder='Header'
-									rows={11}
-									cols={60} />
-							</Grid>
-							<Spacer y={1.5} />
-							<Grid >
-								<Textarea
-									value={payloadText}
-									bordered
-									placeholder='Payload'
-									onChange={handleOutputChange}
-									readOnly
-									rows={11.5}
-									cols={60} />
-							</Grid>
-							<Spacer y={1.5} />
-
-							<Grid css={{ display: 'flex' }}>
-								<Radio.Group orientation='horizontal'
-									value={checked} onChange={setChecked}
-								>
-									<Radio isDisabled value='encode'> Encode </Radio>
-									<Radio value='decode'> Decode </Radio>
-								</Radio.Group>
-								<Spacer x={6} />
-								<Button type="submit"
-									size='sm'
-									css={{
-										color: "Black",
-										linearGradient: "45deg, $red600 -50%, $yellow600 200%"
-									}} >Submit
-								</Button>
-							</Grid>
-						</Grid>
-					</Grid.Container>
-				</form >
-			</Layout >
+			<form onSubmit={handleSubmit}>
+				<div className={classes.container}>
+					<Grid justify='space-around' columns={24} gutter='xl'>
+						<Grid.Col span={12} >
+							<Textarea
+								value={inputText}
+								onChange={handleInputChange}
+								label="Input"
+								minRows={20}
+							/>
+						</Grid.Col>
+						<Grid.Col span={12} >
+							<Textarea
+								value={headerText}
+								onChange={handleOutputChange}
+								label="Output"
+								readOnly
+								placeholder='Header'
+								minRows={9.5}
+							/>
+							<Space h='1.3rem' />
+							<Textarea
+								value={payloadText}
+								placeholder='Payload'
+								onChange={handleOutputChange}
+								readOnly
+								minRows={9.5}
+							/>
+						</Grid.Col>
+						<Grid.Col className={classes.inputCol}>
+							<Button type="submit" className={classes.btn} >
+								Decode
+							</Button>
+						</Grid.Col>
+					</Grid>
+				</div>
+			</form >
 		</>
 	);
 };
