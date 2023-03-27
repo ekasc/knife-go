@@ -27,6 +27,7 @@ export const ConvertFormBase = () => {
 
 	const { classes } = useStyles();
 	const largeScreen = useMediaQuery('(min-width: 767px)');
+	const apiUrl = import.meta.env.VITE_APP_API_URL
 
 
 	const handleNumChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +46,7 @@ export const ConvertFormBase = () => {
 	};
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await fetch(`http://localhost:8080/convert/base`, {
+		const response = await fetch(`${apiUrl}/convert/base`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({

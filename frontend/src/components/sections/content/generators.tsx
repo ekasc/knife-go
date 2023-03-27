@@ -21,6 +21,7 @@ export function GenerateForm() {
 	let [outputSHA256, setSHA256] = useState('');
 
 	const { classes } = useStyles();
+	const apiUrl = import.meta.env.VITE_APP_API_URL
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInput(event.target.value);
@@ -35,7 +36,7 @@ export function GenerateForm() {
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
-		const response = await fetch(`http://localhost:8080/generate/hash`, {
+		const response = await fetch(`${apiUrl}/generate/hash`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({

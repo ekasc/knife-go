@@ -22,6 +22,7 @@ export const CodecForm = (props: { type: string }) => {
 	let [checked, setChecked] = useState('');
 	const type: string = props.type;
 	const largeScreen = useMediaQuery('(min-width: 767px)');
+	const apiUrl = import.meta.env.VITE_APP_API_URL
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInputText(event.target.value);
@@ -32,7 +33,7 @@ export const CodecForm = (props: { type: string }) => {
 
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await fetch(`http://localhost:8080/${checked}/${type}`, {
+		const response = await fetch(`${apiUrl}/${checked}/${type}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({

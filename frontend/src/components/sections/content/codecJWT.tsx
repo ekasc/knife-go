@@ -40,6 +40,7 @@ export const CodecJWTForm = () => {
 	let [inputText, setInputText] = useState('');
 	let [headerText, setHeaderText] = useState('');
 	let [payloadText, setPayloadText] = useState('');
+	const apiUrl = import.meta.env.VITE_APP_API_URL
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInputText(event.target.value);
@@ -50,7 +51,7 @@ export const CodecJWTForm = () => {
 	};
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await fetch(`http://localhost:8080/decode/jwt`, {
+		const response = await fetch(`${apiUrl}/decode/jwt`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({

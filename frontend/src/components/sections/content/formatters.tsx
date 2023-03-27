@@ -5,10 +5,11 @@ import { useMediaQuery } from '@mantine/hooks';
 const useStyles = createStyles((theme) => ({
 	container: { padding: '2rem', paddingTop: '0' },
 	btn: {
-		backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[6] : theme.colors.red[6],
+		backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.red[6],
 		'&:not([data-disabled])': theme.fn.hover({
-			backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.red[8]
+			backgroundColor: theme.colorScheme === 'dark' ? theme.colors.cyan[9] : theme.colors.red[7]
 		}),
+		paddingLeft: '1rem',
 	},
 }));
 
@@ -29,9 +30,10 @@ export const FormatForm = (props: { inputTag: boolean, type: string }) => {
 	const handleOutputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setTextArea(event.target.value);
 	};
+	const apiUrl = import.meta.env.VITE_APP_API_URL;
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await fetch(`http://localhost:8080/format/${type}`, {
+		const response = await fetch(`${apiUrl}/format/${type}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -48,7 +50,7 @@ export const FormatForm = (props: { inputTag: boolean, type: string }) => {
 			<form onSubmit={handleSubmit}>
 				<div className={classes.container}>
 					<Grid justify='space-around' columns={24} gutter='xl' >
-						<Grid.Col span={largeScreen ? 12 : 24} >
+						<Grid.Col order={1} span={largeScreen ? 12 : 24} >
 							<Textarea
 								radius="sm"
 								required
@@ -69,8 +71,8 @@ export const FormatForm = (props: { inputTag: boolean, type: string }) => {
 									/>
 								</div>
 							) : (<div></div>)}
-						</Grid.Col >
-						<Grid.Col span={largeScreen ? 12 : 24} >
+						</Grid.Col>
+						<Grid.Col order={2} span={largeScreen ? 12 : 24} >
 							<Textarea
 								value={formattedText}
 								onChange={handleOutputChange}
@@ -80,19 +82,19 @@ export const FormatForm = (props: { inputTag: boolean, type: string }) => {
 								spellCheck={false}
 							/>
 							<Space h='2rem' />
-							<CopyButton value={formattedText}>
-								{({ copied, copy }) => (
-									<Button
-										color={copied ? 'teal' : theme.colorScheme === 'dark' ? 'cyan' : 'red'}
-										onClick={copy}
-									>
-										{copied ? 'Copied output' : 'Copy output'}
-									</Button>
-								)}
-							</CopyButton>
-						</Grid.Col >
-						<Grid.Col >
-							<Button type="submit" className={classes.btn} >Submit </Button>
+							<Button.Group>
+								<CopyButton value={formattedText}>
+									{({ copied, copy }) => (
+										<Button
+											color={copied ? 'teal' : theme.colorScheme === 'dark' ? 'cyan' : 'red'}
+											onClick={copy}
+										>
+											{copied ? 'Copied output' : 'Copy output'}
+										</Button>
+									)}
+								</CopyButton>
+								<Button type="submit" className={classes.btn} >Submit </Button>
+							</Button.Group>
 						</Grid.Col>
 					</Grid>
 				</div>

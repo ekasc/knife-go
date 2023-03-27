@@ -23,10 +23,11 @@ export const ConvertForm = (props: { type: string }) => {
 	let [_, setTextArea] = useState('');
 
 	const { classes } = useStyles();
-
 	const type = props.type;
 
 	const largeScreen = useMediaQuery('(min-width: 767px)');
+	const apiUrl = import.meta.env.VITE_APP_API_URL
+
 	const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInput(event.target.value);
 	};
@@ -36,7 +37,7 @@ export const ConvertForm = (props: { type: string }) => {
 	};
 	const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await fetch(`http://localhost:8080/convert/${type}`, {
+		const response = await fetch(`${apiUrl}/convert/${type}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
