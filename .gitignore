@@ -2,3 +2,10 @@
 *.vscode
 **node_modules/
 **knife
+dist/
+
+# Local Netlify folder
+.netlify
+
+*.env
+*.yaml
