@@ -1,6 +1,6 @@
-import { Navbar, ScrollArea, createStyles, useMantineColorScheme, Group, SegmentedControl, Center, Box, } from '@mantine/core';
+import { Navbar, ScrollArea, createStyles, useMantineColorScheme, Group, SegmentedControl, Center, Box, ActionIcon, Anchor, } from '@mantine/core';
 import { LinksGroup } from "../menu/menuItems";
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandGithubFilled, IconMoon, IconSun } from "@tabler/icons-react";
 
 
 const formatters = [
@@ -54,7 +54,8 @@ const useStyles = createStyles((theme) => ({
 	},
 	toggle: {
 		padding: 'auto',
-		marginLeft: '16px'
+		display: 'flex',
+		justifyContent: 'space-around'
 	}
 }));
 
@@ -91,7 +92,7 @@ export function ThemeToggle() {
 }
 
 export default function Nav(props: { opened: boolean, setOpened: React.Dispatch<React.SetStateAction<boolean>> }) {
-	const { classes } = useStyles();
+	const { classes, theme } = useStyles();
 	const links = navbarItems.map((obj) => <LinksGroup {...obj} key={obj.label} />);
 
 	return (
@@ -103,6 +104,13 @@ export default function Nav(props: { opened: boolean, setOpened: React.Dispatch<
 		>
 			<Navbar.Section className={classes.toggle}>
 				<ThemeToggle />
+				<Anchor href='https://github.com/ekasc/knife-go' target='_blank'>
+					<ActionIcon aria-label='github' variant='filled' size={34}
+						sx={{ color: theme.colorScheme === 'light' ? theme.white : theme.colors.cyan[6] }}
+					>
+						<IconBrandGithubFilled size='1.5rem' />
+					</ActionIcon>
+				</Anchor>
 			</Navbar.Section>
 			<Navbar.Section grow className={classes.links} component={ScrollArea} >
 				<div className={classes.linksInner}>
